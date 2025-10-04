@@ -669,52 +669,44 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 void SetMotorData(void)
 {
-    if (motordata.address == 0x01)
-    {
-        HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_1);
-        HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_2);
-        HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_3);
-        HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_4);
+    // Barcha kanallarni to‘xtatish
+    HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_2);
+    HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_3);
+    HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_4);
 
-        if (motordata.direction == 0x01) // Вперед
-        {
-            HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
-            HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_2);
-            speed = (uint8_t)motordata.speed * 10;
-            htim2.Instance->CCR1 = speed;
-        }
-        else if (motordata.direction == 0x02) // Назад
-        {
-            HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
-            HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_1);
-            speed = (uint8_t)motordata.speed * 10;
-            htim2.Instance->CCR2 = speed;
-        }
+    speed = (uint8_t)motordata.speed * 10; // speedni har doim fresh hisoblash!
+
+    if (motordata.direction == 0x01) // Oldinga
+    {
+        HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1); // Chap oldinga
+        htim2.Instance->CCR1 = speed;
+        HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4); // O‘ng oldinga
+        htim2.Instance->CCR4 = speed;
     }
-    else if (motordata.address == 0x02)
+    else if (motordata.direction == 0x02) // Orqaga
     {
-        HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_1);
-        HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_2);
-        HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_3);
-        HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_4);
-
-        if (motordata.direction == 0x01) // Вперед
-        {
-
-            HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
-            HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_3);
-            speed = (uint8_t)motordata.speed * 10;
-            htim2.Instance->CCR4 = speed;
-        }
-        else if (motordata.direction == 0x02) // Назад
-        {
-            HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
-            HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_4);
-            speed = (uint8_t)motordata.speed * 10;
-            htim2.Instance->CCR3 = speed;
-        }
+        HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2); // Chap orqaga
+        htim2.Instance->CCR2 = speed;
+        HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3); // O‘ng orqaga
+        htim2.Instance->CCR3 = speed;
+    }
+    else if (motordata.direction == 0x03) // Chapga burilish
+    {
+        HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2); // Chap orqaga
+        htim2.Instance->CCR2 = speed;
+        HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4); // O‘ng oldinga
+        htim2.Instance->CCR4 = speed;
+    }
+    else if (motordata.direction == 0x04) // O‘ngga burilish
+    {
+        HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1); // Chap oldinga
+        htim2.Instance->CCR1 = speed;
+        HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3); // O‘ng orqaga
+        htim2.Instance->CCR3 = speed;
     }
 }
+
 /* USER CODE END 4 */
 
 /**

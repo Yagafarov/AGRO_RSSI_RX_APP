@@ -13,5 +13,5 @@
 ../Core/Src/main.c:576:6:HAL_UART_RxCpltCallback	19
 ../Core/Src/main.c:654:6:HAL_UART_ErrorCallback	3
 ../Core/Src/main.c:664:6:HAL_GPIO_EXTI_Callback	2
-../Core/Src/main.c:670:6:SetMotorData	7
-../Core/Src/main.c:724:6:Error_Handler	1
+../Core/Src/main.c:670:6:SetMotorData	5
+../Core/Src/main.c:716:6:Error_Handler	1
